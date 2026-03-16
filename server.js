@@ -33,14 +33,14 @@ const LETTERS_DIR = path.join(__dirname, 'letters');
 function filenameToTitle(filename) {
   return filename
     .replace(/^\d+-/, '')
-    .replace(/\.txt$/, '')
+    .replace(/\.(txt|md)$/, '')
     .replace(/-/g, ' ')
     .replace(/\b\w/g, c => c.toUpperCase());
 }
 
 function safeFilename(filename) {
   return (
-    filename.endsWith('.txt') &&
+    (filename.endsWith('.txt') || filename.endsWith('.md')) &&
     !filename.includes('/') &&
     !filename.includes('..') &&
     !filename.includes('\\')
@@ -58,7 +58,7 @@ app.get('/health', (req, res) => {
 app.get('/api/letters', (req, res) => {
   try {
     const files = fs.readdirSync(LETTERS_DIR)
-      .filter(f => f.endsWith('.txt'))
+      .filter(f => f.endsWith('.txt') || f.endsWith('.md'))
       .sort();
 
     const letters = files.map(filename => {
